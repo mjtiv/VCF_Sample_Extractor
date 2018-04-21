@@ -1,0 +1,16 @@
+#####################################################
+#####################################################
+			VCF Sample Extractor
+#####################################################
+#####################################################
+  ALL variables are space seperated from input key	
+
+Name of Original VCF Type File
+--VCF_Input_File Chromosome_33.txt
+
+Name of Samples to Extract
+--Samples_to_Extract_File Samples_to_Extract.txt
+
+Name of Output VCF File
+(VCF file of ONLY samples of interest)
+--VCF_Output_File Extracted_Samples.txt
