@@ -138,33 +138,66 @@ def extract_print_new_vcf_file(parameter_stuff, samples_to_extract_list):
             # Getting the sample names from file
             header_sample_list = parsed_line[9:]
   
-            #setting initial movement value
+            #setting initial movement value (find end of sample extraction list)
             x = 0
-            for header_sample in header_sample_list:
 
-                for sample in samples_to_extract_list:
+            print (samples_to_extract_list)
+            end_of_list_index = len(samples_to_extract_list) - 1
 
-                    # Finding matching samples and get the index location
-                    if sample == header_sample:
+            # Need sample extraction list first to control flow better
+            # Ending of the line problematic otherwise
+            for sample in samples_to_extract_list:
+                
+                # Index of actual file list
+                y = 0
+
+                for header_sample in header_sample_list:
+                    # Setting up loop to change how output occurs
+                    # Last sample put a newline instead of tab
+                    if end_of_list_index == x:
                         
-                        # Write sample name to header of new vcf file
-                        vcf_output_file.write(str(header_sample) + "\t")
+                        # Finding matching samples and get the index location
+                        if sample == header_sample:
+      
+                            # Write sample name to header of new vcf file
+                            # Last sample being extracted add new line
+                            vcf_output_file.write(str(header_sample) + "\n")
 
-                        # Get the index of the sample
-                        samples_list_indices.append(x)
+                            # Get the index of the sample
+                            samples_list_indices.append(y)
 
-                    # Just keep moving through lists
+                        # Just keep moving through lists
+                        else:
+                            pass
+
+                    # All samples except for last sample get a tab
                     else:
-                        pass
 
-                #Move the counter for next iteration
+                        # Finding matching samples and get the index location
+                        if sample == header_sample:
+                        
+                            # Write sample name to header of new vcf file
+                            vcf_output_file.write(str(header_sample) + "\t")
+
+                            # Get the index of the sample
+                            samples_list_indices.append(y)
+
+                        # Just keep moving through lists
+                        else:
+                            pass
+
+                    #Move the counter for next iteration of file head sample list
+                    y += 1
+
+                #Move the counter for next iteration till end of sample extraction list
                 x += 1
+
                     
             print ("Printing the indices of samples")
             print (samples_list_indices)        
-            # Move the output file to a new line
-            vcf_output_file.write("\n")
-    
+            
+        
+        # Start Parsing Actual Variant Data of File
         else:
             line = line.rstrip('\n')
             parsed_line = line.split('\t')
@@ -181,11 +214,24 @@ def extract_print_new_vcf_file(parameter_stuff, samples_to_extract_list):
             # Write to new vcf file
             vcf_output_file.write(variant_info + '\t')
             
+            # Find end of list index
+            # Built in a way to put a newline at end of list
+            end_of_list_index = len(samples_list_indices) - 1
+            x = 0
+
+            # Start cycling through variant sample information
             for value in samples_list_indices:
-                vcf_output_file.write(str(samples_data[value]) + '\t')
 
-            vcf_output_file.write("\n")
+                if end_of_list_index == x:
+                    vcf_output_file.write(str(samples_data[value]) + '\n')
 
+                else:
+                    vcf_output_file.write(str(samples_data[value]) + '\t')
+
+                # Move indice counter (till it hits end of samples list)
+                x +=1
+
+        
     vcf_input_file.close()
     vcf_output_file.close()
     
@@ -214,19 +260,4 @@ def main():
     
 
 main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
