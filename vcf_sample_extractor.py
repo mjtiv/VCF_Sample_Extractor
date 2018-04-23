@@ -112,14 +112,16 @@ def extract_print_new_vcf_file(parameter_stuff, samples_to_extract_list):
     samples_list_indices = []
 
     for line in vcf_input_file:
-        
+   
         #Get Header from file
         
-        if line.startswith(("##", "#", " #", "'#")) and not line.startswith('#CHROM'):
+        if line.startswith(("##", "#", " #", "'#", '"##')) and not line.startswith('#CHROM'):
+
             vcf_output_file.write(line)
+            continue
         
         if line.startswith('#CHROM'):
-
+            
             # Strip newline from line
             line = line.rstrip('\n')
 
